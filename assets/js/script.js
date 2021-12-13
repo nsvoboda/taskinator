@@ -171,7 +171,7 @@ var taskStatusChangeHandler = function(event) {
     if (tasks[i].id === parseInt(taskId)){
       tasks[i].status = statusValue;
     }
-    
+
     saveTasks();
   }
 };
@@ -206,21 +206,44 @@ var deleteTask = function(taskId) {
   taskSelected.remove();
 
   // create new array to hold updated list of tasks
-  var updatedTasArr = [];
+  var updatedTaskArr = [];
 
   // loop through current tasks
   for (var i = 0; i < tasks.length; i++){
-    // if tasks[i].id doesn't match the value of tasId, let's keep that task and push it in to the new array
-    if (tasks[i].id !== parseInte(taskId));
+    // if tasks[i].id doesn't match the value of taskId, let's keep that task and push it in to the new array
+    if (tasks[i].id !== parseInt(taskId));
   }
   // reassign tasks array to be the same as updatedTaskArr
-  tasks = updatedTasArr;
+  tasks = updatedTaskArr;
 
   saveTasks();
 };
 
 var saveTasks = function(){
   localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
+// 1. Get task items from localStorage
+// 2. Convert tasks from the string format back into an array of objects
+// 3. Iterates through a tasks array and creates task elements on the page from items
+
+var loadTasks = function(){
+  savedTasks = localStorage.getItem("tasks");
+  console.log(tasks);
+
+  // if there are no tasks, set tasks to an empty array and return out of the function
+  if(!savedTasks){
+    return false;
+  }
+
+  // parse into array of objects
+  savedTasks = JSON.parse(savedTasks);
+
+  // loop through savedTasks array
+  for (var i = 0; i < savedTasks.length; i++){
+    // pass each task object into the 'createTaskEl()' function
+    createTaskEl(savedTasks[i]);
+  }
 };
 
 // Create a new task
@@ -231,3 +254,5 @@ pageContentEl.addEventListener("click", taskButtonHandler);
 
 // for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+loadTasks();
